@@ -6,10 +6,11 @@ langchain-community==0.3.27
 langchain-core==0.3.72
 
 langchain-groq==0.3.6
+langchain-huggingface==0.3.1
 
 
 docx2txt==0.9
-ipykernel==6.30.0gi
+ipykernel==6.30.0
 python-multipart==0.0.20
 faiss-cpu
 

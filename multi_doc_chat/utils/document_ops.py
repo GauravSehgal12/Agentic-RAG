@@ -1,7 +1,7 @@
 from __future__ import annotations
 from pathlib import Path
 from typing import Iterable, List
-from langchain.schema import Document
+from langchain_core.documents import Document
 from langchain_community.document_loaders import PyPDFLoader, Docx2txtLoader, TextLoader
 from multi_doc_chat.logger.custom_logger import CustomLogger
 from multi_doc_chat.exceptions.custom_exception import DocumentPortalException
