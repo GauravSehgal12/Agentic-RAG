@@ -9,7 +9,7 @@ from langchain_groq import ChatGroq
 
 from multi_doc_chat.utils.config_loader import load_config
 from multi_doc_chat.logger import GLOBAL_LOGGER as log
-from multi_doc_chat.exception.custom_exception import DocumentPortalException
+from multi_doc_chat.exceptions.custom_exception import DocumentPortalException
 
 
 class ApiKeyManager:
