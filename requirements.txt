@@ -6,11 +6,10 @@ langchain-community==0.3.27
 langchain-core==0.3.72
 
 langchain-groq==0.3.6
-langchain-google-genai==2.1.8
-langchain-openai==0.2.10
+
 
 docx2txt==0.9
-ipykernel==6.30.0
+ipykernel==6.30.0gi
 python-multipart==0.0.20
 faiss-cpu
 
