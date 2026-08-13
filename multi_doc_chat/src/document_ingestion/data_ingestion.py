@@ -6,7 +6,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from multi_doc_chat.utils.model_loader import ModelLoader
 from multi_doc_chat.logger.custom_logger import CustomLogger
-from multi_doc_chat.exception.custom_exception import DocumentPortalException
+from multi_doc_chat.exceptions.custom_exception import DocumentPortalException
 import json
 import uuid
 from datetime import datetime
