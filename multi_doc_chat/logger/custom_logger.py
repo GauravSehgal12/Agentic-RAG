@@ -54,6 +54,7 @@ class CustomLogger:
             wrapper_class=structlog.stdlib.BoundLogger,
             cache_logger_on_first_use=True,
         )
+        self._default_logger = structlog.get_logger("CustomLogger")
         CustomLogger._configured = True
 
     def get_logger(self, name: str = __file__):
@@ -66,6 +67,24 @@ class CustomLogger:
 
         return structlog.get_logger(logger_name)
 
+    def info(self, event: str, *args, **kwargs):
+        return self._default_logger.info(event, *args, **kwargs)
+
+    def warning(self, event: str, *args, **kwargs):
+        return self._default_logger.warning(event, *args, **kwargs)
+
+    def error(self, event: str, *args, **kwargs):
+        return self._default_logger.error(event, *args, **kwargs)
+
+    def debug(self, event: str, *args, **kwargs):
+        return self._default_logger.debug(event, *args, **kwargs)
+
+    def critical(self, event: str, *args, **kwargs):
+        return self._default_logger.critical(event, *args, **kwargs)
+
+    def exception(self, event: str, *args, **kwargs):
+        return self._default_logger.exception(event, *args, **kwargs)
+
 
 def get_logger(name: str = __file__):
     """Helper function to get a logger instance by name."""
@@ -74,3 +93,27 @@ def get_logger(name: str = __file__):
 
 # Global singleton logger instance
 GLOBAL_LOGGER = get_logger("GLOBAL")
+
+
+def info(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.info(event, *args, **kwargs)
+
+
+def warning(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.warning(event, *args, **kwargs)
+
+
+def error(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.error(event, *args, **kwargs)
+
+
+def debug(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.debug(event, *args, **kwargs)
+
+
+def critical(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.critical(event, *args, **kwargs)
+
+
+def exception(event: str, *args, **kwargs):
+    return GLOBAL_LOGGER.exception(event, *args, **kwargs)
