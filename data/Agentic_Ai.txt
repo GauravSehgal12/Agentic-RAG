@@ -1,0 +1,442 @@
+AGENTIC AI - STUDY NOTES
+
+1.  What is Agentic AI? Agentic AI refers to AI systems that can
+    understand a goal, reason about the steps needed to achieve it, use
+    tools, observe results, and take further actions with limited human
+    intervention.
+
+A traditional LLM mainly generates a response to a prompt. An AI agent
+can: - Understand a goal - Break the goal into tasks - Decide what
+action to take - Use external tools - Observe the result - Correct or
+change its approach - Continue until the goal is completed
+
+Basic flow:
+
+User Goal | v Reasoning / Planning | v Action / Tool Use | v Observation
+| +—-> Continue / Re-plan | v Final Result
+
+2.  LLM vs AI Agent
+
+LLM: - Primarily generates text. - Usually responds to a single
+prompt. - Does not inherently perform actions. - May have no persistent
+state or tool access.
+
+AI Agent: - Uses an LLM as its reasoning component. - Can call tools
+such as APIs, databases, search engines, calculators, or code
+interpreters. - Maintains state or memory when required. - Can execute
+multi-step workflows. - Can react to tool outputs and errors.
+
+3.  Main Components of an AI Agent
+
+A. LLM / Reasoning Model The LLM acts as the reasoning engine.
+Examples: - GPT models - Claude - Gemini - Llama - Mistral
+
+B. Tools Tools allow the agent to interact with the outside world.
+
+Examples: - Web search - Calculator - Python/code execution - Database
+queries - REST APIs - Email - File systems - Cloud services
+
+C. Memory Memory allows an agent to retain useful information.
+
+Types: - Short-term memory: information from the current
+task/conversation. - Long-term memory: information stored for future
+interactions.
+
+D. Planning Planning determines the sequence of actions required to
+accomplish a goal.
+
+Example: Goal: Find the cheapest flight and prepare a travel plan.
+
+Possible plan: 1. Search flights. 2. Compare prices. 3. Check baggage
+rules. 4. Select suitable flight. 5. Search hotels. 6. Create itinerary.
+
+4.  Agentic AI Workflow
+
+A common agent loop is:
+
+PERCEIVE -> REASON -> ACT -> OBSERVE -> REASON -> ACT -> …
+
+Perceive: Understand the user request and available information.
+
+Reason: Determine what needs to be done.
+
+Act: Call a tool or perform an operation.
+
+Observe: Read the result of the operation.
+
+Re-plan: If the result is insufficient or unexpected, choose another
+action.
+
+Finish: Return the final result when the goal is satisfied.
+
+5.  What is Tool Calling?
+
+Tool calling allows an LLM to request execution of a predefined
+function.
+
+Example:
+
+User: “Calculate the average of 10, 20, and 30.”
+
+Agent: 1. Understands that calculation is required. 2. Calls calculator
+tool. 3. Receives result = 20. 4. Returns the answer.
+
+The LLM itself may not directly execute the tool. Instead, the
+application executes the requested function and provides the result back
+to the model.
+
+6.  ReAct Pattern
+
+ReAct stands for Reasoning + Acting.
+
+Conceptually:
+
+Thought -> Action -> Observation -> Thought -> Action -> Observation
+
+Example:
+
+Goal: “What is the weather in Delhi and should I carry an umbrella?”
+
+Agent: 1. Determine that weather information is required. 2. Call
+weather API. 3. Observe weather result. 4. Determine whether rain is
+expected. 5. Give recommendation.
+
+Modern implementations may hide internal reasoning rather than exposing
+it to the user. The important concept is the iterative
+action-observation loop.
+
+7.  Agent vs Workflow
+
+Workflow: - Steps are mostly predefined. - Execution path is
+predictable. - Good when the process is known.
+
+Agent: - Can dynamically decide which action to take. - Execution path
+can change based on observations. - Good when the problem is less
+predictable.
+
+Example workflow:
+
+Input -> Validate -> Database -> Generate Report -> Output
+
+Example agent:
+
+Goal -> Decide what information is needed -> Search -> Analyze -> Search
+again if necessary -> Produce answer
+
+8.  Single-Agent System
+
+A single agent is responsible for the entire task.
+
+Example: A customer-support agent can: - Read the question. - Search
+documentation. - Check customer information. - Create a support
+ticket. - Respond to the customer.
+
+Architecture:
+
+User | Agent | +– Search Tool +– Database Tool +– Ticket Tool +– Email
+Tool
+
+9.  Multi-Agent System
+
+A multi-agent system uses multiple specialized agents.
+
+Example:
+
+Manager Agent | +– Research Agent +– Data Analysis Agent +– Coding Agent
++– Writing Agent
+
+Each agent has a specific role.
+
+Advantages: - Specialization - Easier separation of responsibilities -
+Complex tasks can be divided into smaller tasks
+
+Disadvantages: - More complexity - Higher latency - Higher cost -
+Coordination problems - More difficult debugging
+
+10. Agent Memory
+
+Short-Term Memory: Stores information needed during the current
+interaction.
+
+Example: User says: “My preferred programming language is Python.”
+
+The agent can use this information later in the same conversation.
+
+Long-Term Memory: Stores information outside the current context.
+
+Common approaches: - Databases - Vector databases - Key-value stores -
+User profiles
+
+Vector memory is useful for semantic retrieval.
+
+Example:
+
+User information -> Embedding -> Vector Database | Future query ->
+Embedding -> Similarity Search -> Relevant Memory
+
+11. RAG and Agentic AI
+
+RAG stands for Retrieval-Augmented Generation.
+
+Typical RAG:
+
+Question | Retriever | Relevant Documents | LLM | Answer
+
+Agentic RAG adds decision-making.
+
+Question | Agent | Decide whether retrieval is needed | Retriever /
+Other Tool | Observe result | Agent | Final Answer
+
+An agent can decide: - Which source to search - Whether more information
+is required - Which query to use - Whether to retrieve again - Whether
+another tool is more appropriate
+
+12. Agentic RAG Example
+
+User: “Compare the company’s 2024 and 2025 financial performance.”
+
+Agent may: 1. Search for 2024 report. 2. Search for 2025 report. 3.
+Extract relevant financial metrics. 4. Compare revenue and profit. 5.
+Identify important changes. 6. Generate a summary.
+
+13. LangChain
+
+LangChain is a framework for building applications around LLMs.
+
+It provides components for: - Models - Prompts - Tools - Retrievers -
+Document loaders - Memory/state - Agents - Chains
+
+Typical agent architecture:
+
+User | Prompt | LLM | Tool Selection | Tool | Tool Result | LLM | Final
+Response
+
+14. LangGraph
+
+LangGraph is a framework for building stateful, graph-based agent
+workflows.
+
+Important concepts: - State - Nodes - Edges - Conditional edges -
+Checkpoints - Persistence - Human-in-the-loop
+
+A graph can look like:
+
+START | v Agent Node | +—-> Tool Node | | | v +—— Agent Node | v END
+
+The graph can contain loops, which are useful for iterative agents.
+
+15. State in LangGraph
+
+State contains information shared between nodes.
+
+Example state:
+
+{ “user_query”: “…”, “messages”: […], “tool_result”: “…”,
+“final_answer”: “…” }
+
+Each node can read the state and update it.
+
+16. Nodes and Edges
+
+Node: A function that performs an operation.
+
+Examples: - Call LLM - Search database - Execute tool - Validate result
+
+Edge: Defines how execution moves from one node to another.
+
+Normal edge: A -> B
+
+Conditional edge: A -> B if condition is true A -> C otherwise
+
+17. Human-in-the-Loop
+
+Human-in-the-loop means the agent pauses and asks a human for approval
+or input before performing certain actions.
+
+Useful for: - Financial transactions - Sending important emails -
+Deleting data - Production deployments - High-impact decisions
+
+Example:
+
+Agent -> Prepare action -> Human Approval -> Execute
+
+18. Guardrails
+
+Guardrails restrict or validate agent behavior.
+
+Examples: - Input validation - Output validation - Permission checks -
+Tool restrictions - Content filters - Maximum number of tool calls -
+Maximum execution time - Human approval
+
+Example:
+
+Agent wants to delete database records | Permission Check | Approved? /
+Yes No | | Execute Stop
+
+19. Agent Evaluation
+
+Agentic systems should be evaluated on more than final-answer quality.
+
+Important metrics: - Task success rate - Tool selection accuracy - Tool
+execution accuracy - Response correctness - Latency - Token usage -
+Cost - Number of steps - Failure/retry rate - Safety violations
+
+Example:
+
+Task success = Successful tasks / Total tasks
+
+20. Common Problems in Agentic AI
+
+A. Hallucination The model may generate incorrect information.
+
+B. Wrong Tool Selection The agent may choose an inappropriate tool.
+
+C. Infinite Loops The agent may repeatedly perform the same action.
+
+D. Excessive Tool Calls Too many calls increase latency and cost.
+
+E. Context Overflow Long histories can exceed the model context window.
+
+F. Prompt Injection Untrusted external content can attempt to manipulate
+the agent.
+
+G. Permission Problems An agent with excessive permissions can cause
+unintended actions.
+
+H. Unreliable Planning The initial plan may fail when the environment
+changes.
+
+21. Agent Security
+
+Important principles: - Give agents only the permissions they need. -
+Treat retrieved documents and web pages as untrusted input. - Validate
+tool arguments. - Require approval for high-impact operations. - Log
+tool calls. - Limit execution time and tool-call count. - Keep API keys
+and secrets out of prompts. - Use environment variables or secret
+managers.
+
+22. Example: Customer Support Agent
+
+Goal: “Resolve my billing issue.”
+
+Possible process:
+
+1.  Agent understands the problem.
+
+2.  Search knowledge base.
+
+3.  Check customer account.
+
+4.  Identify billing issue.
+
+5.  If refund is allowed, prepare refund.
+
+6.  Request human approval if required.
+
+7.  Execute refund.
+
+8.  Update support ticket.
+
+9.  Respond to customer.
+
+10. Example: Coding Agent
+
+Goal: “Fix the bug in my application.”
+
+Possible loop:
+
+1.  Read repository.
+
+2.  Understand error.
+
+3.  Inspect relevant files.
+
+4.  Modify code.
+
+5.  Run tests.
+
+6.  Observe test results.
+
+7.  Fix remaining failures.
+
+8.  Run tests again.
+
+9.  Provide final result.
+
+10. Example: Data Analysis Agent
+
+Goal: “Analyze sales performance.”
+
+Agent can: 1. Query database. 2. Load data. 3. Clean data. 4. Calculate
+metrics. 5. Generate charts. 6. Identify trends. 7. Produce a report.
+
+25. Important Terms
+
+LLM: Large Language Model.
+
+Agent: An AI system that can reason, use tools, and perform actions
+toward a goal.
+
+Tool: An external function/API that an agent can call.
+
+Memory: Information retained for use during or across tasks.
+
+State: The current information available to an agent workflow.
+
+RAG: Retrieval-Augmented Generation.
+
+ReAct: Reasoning and Acting pattern.
+
+Planning: Breaking a goal into actions.
+
+Reflection: Evaluating an action/result and potentially correcting the
+approach.
+
+Guardrail: A constraint or validation mechanism that controls agent
+behavior.
+
+Human-in-the-loop: Human approval or intervention during agent
+execution.
+
+Orchestration: Managing how agents, tools, and workflows interact.
+
+26. Interview Questions
+
+Q1. What is Agentic AI? Answer: Agentic AI refers to AI systems capable
+of pursuing goals by reasoning about tasks, selecting actions, using
+tools, observing results, and adapting their approach.
+
+Q2. What is the difference between an LLM and an AI agent? Answer: An
+LLM primarily generates predictions or responses, while an AI agent
+combines an LLM with tools, state/memory, and an execution loop to
+perform multi-step tasks.
+
+Q3. What is ReAct? Answer: ReAct is a pattern that combines reasoning
+and action, allowing an agent to select actions, observe their results,
+and continue based on those observations.
+
+Q4. What is the difference between RAG and Agentic RAG? Answer:
+Traditional RAG generally follows a retrieval pipeline, while Agentic
+RAG allows an agent to decide when and how to retrieve information and
+potentially use multiple retrieval steps or tools.
+
+Q5. What is LangGraph? Answer: LangGraph is a framework for building
+stateful, graph-based agent workflows with nodes, edges, conditional
+routing, loops, persistence, and human-in-the-loop capabilities.
+
+Q6. What is multi-agent AI? Answer: A multi-agent system consists of
+multiple specialized agents that collaborate to complete a larger task.
+
+Q7. Why are guardrails important? Answer: Guardrails reduce unsafe or
+unintended behavior by validating inputs and outputs, restricting tools
+and permissions, and requiring approval for sensitive actions.
+
+27. Simple Mental Model
+
+Remember Agentic AI as:
+
+GOAL | PLAN | ACT | OBSERVE | REFLECT / RE-PLAN | ACT AGAIN | SUCCESS
+
+The key difference is that an agent does not only “answer”; it can
+decide what to do next and interact with external systems to accomplish
+a goal.
