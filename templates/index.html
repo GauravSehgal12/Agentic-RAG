@@ -4,20 +4,30 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MultiDocChat</title>
-  <link rel="stylesheet" href="/static/styles.css" />
-  <style>
-    /* Minimal inline tweaks; most styles live in styles.css */
-  </style>
+  <link rel="stylesheet" href="/static/style.css" />
   <script>
     const $ = (sel) => document.querySelector(sel);
     let sessionId = localStorage.getItem('mdc_session_id') || '';
+
+    function updateFileDisplay() {
+      const input = $('#file-input');
+      const info = $('#file-info');
+      if (input.files && input.files.length > 0) {
+        const names = Array.from(input.files).map(f => f.name).join(', ');
+        info.textContent = `Selected (${input.files.length}): ${names}`;
+        info.style.display = 'block';
+      } else {
+        info.textContent = '';
+        info.style.display = 'none';
+      }
+    }
 
     async function uploadFiles(evt) {
       evt.preventDefault();
       const input = $('#file-input');
       const files = input.files;
       if (!files || files.length === 0) {
-        toast('Please choose at least one file');
+        toast('Please choose at least one file (PDF, DOCX, or TXT)');
         return;
       }
       toggleIndexing(true);
@@ -25,15 +35,15 @@
         const fd = new FormData();
         for (const f of files) fd.append('files', f);
         const res = await fetch('/upload', { method: 'POST', body: fd });
-        if (!res.ok) throw new Error((await res.json()).detail || 'Upload failed');
         const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Upload failed');
         sessionId = data.session_id;
         localStorage.setItem('mdc_session_id', sessionId);
         $('#chat').style.display = 'block';
         toast('Indexing complete. You can chat now.');
       } catch (e) {
         console.error(e);
-        toast('Indexing failed. Try re-uploading.');
+        toast(`Indexing failed: ${e.message || 'Try re-uploading'}`);
       } finally {
         toggleIndexing(false);
       }
@@ -53,12 +63,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ session_id: sessionId, message: text })
         });
-        if (!res.ok) throw new Error((await res.json()).detail || 'Chat failed');
         const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Chat failed');
         appendMessage('assistant', data.answer);
       } catch (e) {
         console.error(e);
-        toast('Thinking failed. Try again.');
+        toast(`Thinking failed: ${e.message || 'Try again'}`);
       } finally {
         toggleThinking(false);
       }
@@ -87,13 +97,16 @@
       const el = $('#toast');
       el.textContent = msg;
       el.style.opacity = '1';
-      setTimeout(() => el.style.opacity = '0', 2500);
+      setTimeout(() => el.style.opacity = '0', 3500);
     }
 
     window.addEventListener('DOMContentLoaded', () => {
       if (sessionId) {
         $('#chat').style.display = 'block';
       }
+      const fileInput = $('#file-input');
+      fileInput.addEventListener('change', updateFileDisplay);
+
       $('#upload-form').addEventListener('submit', uploadFiles);
       $('#send-btn').addEventListener('click', sendMessage);
       $('#message-input').addEventListener('keydown', (e) => {
@@ -105,7 +118,16 @@
       drop.addEventListener('drop', (e) => {
         e.preventDefault();
         drop.classList.remove('hover');
-        $('#file-input').files = e.dataTransfer.files;
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          try {
+            const dt = new DataTransfer();
+            for (const f of e.dataTransfer.files) dt.items.add(f);
+            fileInput.files = dt.files;
+          } catch (err) {
+            fileInput.files = e.dataTransfer.files;
+          }
+          updateFileDisplay();
+        }
       });
     });
   </script>
@@ -120,12 +142,13 @@
     <section id="uploader">
       <form id="upload-form">
         <div id="dropzone">
-          <p>Drag and drop files here</p>
+          <p>Drag and drop PDF / DOCX / TXT files here</p>
           <p>or</p>
-          <label class="btn">
+          <label class="btn" for="file-input">
             Choose files
-            <input id="file-input" type="file" name="files" multiple hidden />
           </label>
+          <input id="file-input" type="file" name="files" accept=".pdf,.docx,.txt" multiple style="display: none;" />
+          <p id="file-info" style="margin-top: 12px; font-weight: 500; color: #4f46e5; display: none;"></p>
         </div>
         <button id="upload-btn" style="background-color: rgb(0, 94, 225); color: white; border-radius: 6px; cursor: pointer;" type="submit">Upload & Index</button>
         <span id="indexing" class="hint" style="display:none;">Indexing…</span>
