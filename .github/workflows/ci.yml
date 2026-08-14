@@ -29,6 +29,6 @@ jobs:
           GROQ_API_KEY: dummy
           LLM_PROVIDER: groq
         run: |
-          pytest tests --maxfail=1 --disable-warnings -q
+            python -m pytest test --maxfail=1 --disable-warnings -q
 
         
