@@ -1,0 +1,48 @@
+{
+    "family": "agentic-rag-std",
+    "networkMode": "awsvpc",
+    "executionRoleArn": "arn:aws:iam::312743357095:role/ecsTaskExecutionRole",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "1024",
+    "memory": "8192",
+    "containerDefinitions": [
+      {
+        "name": "agenticrag-container",
+        "image": "312743357095.dkr.ecr.ap-south-1.amazonaws.com/agenticrag",
+        "cpu": 1024,
+        "essential": true,
+        "portMappings": [
+          {
+            "containerPort": 8080,
+            "hostPort": 8080,
+            "protocol": "tcp",
+            "name": "agenticrag-container-8080-tcp",
+            "appProtocol": "http"
+          }
+        ],
+        "environment": [
+          {
+            "name": "ENV",
+            "value": "production"
+          }
+        ],
+        "secrets": [
+          {
+            "name": "groq_key_agentic_rag",
+            "valueFrom": "arn:aws:secretsmanager:ap-south-1:312743357095:secret:groq_key_agentic_rag-I72YLP"
+          }
+  
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-group": "/ecs/agentic-rag-std",
+            "awslogs-region": "ap-south-1",
+            "awslogs-stream-prefix": "ecs",
+            "awslogs-create-group": "true"
+          }
+        }
+      }
+    ]
+  }
+  

@@ -9,7 +9,7 @@ on:
       - completed
   workflow_call:
 env:
-  AWS_REGION: us-east-1
+  AWS_REGION: ap-south-1
   ECR_REPOSITORY: agenticrag
   ECS_SERVICE: agenticrag-service
   ECS_CLUSTER: agenticrag-cluster
