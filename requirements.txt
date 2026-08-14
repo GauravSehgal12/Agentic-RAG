@@ -26,5 +26,6 @@ pypdf
 sentence-transformers
 
 fastapi[standard]
+uvicorn[standard]
 
 pytest
