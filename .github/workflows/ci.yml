@@ -1,20 +1,24 @@
 name: Agentic_RAG
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - DeployOnAWS
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    steps:
 
+    steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.13'
 
@@ -29,6 +33,4 @@ jobs:
           GROQ_API_KEY: dummy
           LLM_PROVIDER: groq
         run: |
-            python -m pytest test --maxfail=1 --disable-warnings -q
-
-        
+          python -m pytest test --maxfail=1 --disable-warnings -q
