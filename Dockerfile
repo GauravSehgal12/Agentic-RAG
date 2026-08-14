@@ -7,11 +7,15 @@ ENV PYTHONPATH="/app:/app/multi_doc_chat"
 WORKDIR /app
 
 RUN apt-get update && \
-    apt-get install -y build-essential poppler-utils curl && \
+    apt-get install -y build-essential poppler-utils && \
     rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
+# Install CPU-only PyTorch
+RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+
+# Install remaining dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
