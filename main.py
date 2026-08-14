@@ -164,7 +164,7 @@ async def chat(req: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=500, detail=f"Chat failed: {e}")
 
 
-# Uvicorn entrypoint for `python main.py` (optional)
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=int(os.getenv("PORT", "8000")), reload=True)
+    
+    app = FastAPI()
