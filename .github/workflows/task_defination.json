@@ -29,7 +29,7 @@
         "secrets": [
           {
             "name": "GROQ_API_KEY",
-            "valueFrom": "arn:aws:secretsmanager:ap-south-1:312743357095:secret:groq_key_agentic_rag-I72YLP"
+            "valueFrom": "arn:aws:secretsmanager:ap-south-1:312743357095:secret:groq_key_agentic_rag-I72YLP:GROQ_API_KEY::"
           }
   
         ],
